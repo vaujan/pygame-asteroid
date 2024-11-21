@@ -15,34 +15,67 @@ def main():
     clock = pygame.time.Clock()
     dt = 0
     
-    updateable = pygame.sprite.Group()
-    drawable = pygame.sprite.Group()
-    asteroid = pygame.sprite.Group()
+    # Game font setup - only need to do this once
+    game_font_title = pygame.font.Font(None, 74)
+    game_font_subtitle = pygame.font.Font(None, 32)
+    game_over_text = game_font_title.render("Game Over", True, "white")
+    press_r_text = game_font_subtitle.render("Press r to restart", True, "white")
+    game_over_text_rect = game_over_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+    press_r_text_subtitle_rect = press_r_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 50))
 
-    Player.containers = (updateable, drawable)
-    Asteroid.containers = (asteroid, updateable, drawable)
-    AsteroidField.containers = (updateable)
+    def init_game():
+        # Initialize all sprite groups
+        updateable = pygame.sprite.Group()
+        drawable = pygame.sprite.Group()
+        asteroid = pygame.sprite.Group()
 
-    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-    asteroid_field = AsteroidField()
+        # Set up sprite containers
+        Player.containers = (updateable, drawable)
+        Asteroid.containers = (asteroid, updateable, drawable)
+        AsteroidField.containers = (updateable)
+
+        # Create game objects
+        player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+        asteroid_field = AsteroidField()
+        
+        return updateable, drawable, asteroid, player, asteroid_field, False
+
+    # Initial game setup
+    updateable, drawable, asteroid, player, asteroid_field, game_over = init_game()
 
     while True: 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
+        
+        # Game Logic
+        keys = pygame.key.get_pressed()
+       
+        if game_over and keys[pygame.K_r]:
+            # Reset entire jgame state
+            updateable, drawable, asteroid, player, asteroid_field, game_over = init_game()
+        elif not game_over:
+            # Update all sprites
+            for sprite in updateable:
+                sprite.update(dt)
 
+            # Check collisions
+            for asteroid_sprite in asteroid:
+                if player.is_collided(asteroid_sprite):
+                    game_over = True
+        
+        # Rendering
         screen.fill("black")
-
         for sprite in drawable:
             sprite.draw(screen)
-        
-        for sprite in updateable:
-            sprite.update(dt)
-        
-        pygame.display.flip()
 
+        # Game over conditions
+        if game_over:
+           screen.blit(game_over_text, game_over_text_rect)
+           screen.blit(press_r_text, press_r_text_subtitle_rect)
+
+        pygame.display.flip()
         dt = clock.tick(60) / 1000
-        
 
 if __name__ == "__main__":
     main()
