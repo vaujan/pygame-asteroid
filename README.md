@@ -2,8 +2,6 @@
 
 ## 🚨 Disclaimer 🚨
 
-/home/thatguy/Pictures/Screenshot from 2024-11-22 17-04-56.png
-
 > - There's a non-zero chance I have no idea how some parts of this actually work 😅
 > - Some solutions might be... let's say "creatively implemented" 🎨
 >   Remember: This is a learning project, not a NASA space mission control system.
