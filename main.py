@@ -4,6 +4,7 @@ from constants import *
 from player import *
 from asteroid import *
 from asteroidfield import *
+from shot import *
 
 def main():
     pygame.init()
@@ -28,20 +29,22 @@ def main():
         updateable = pygame.sprite.Group()
         drawable = pygame.sprite.Group()
         asteroid = pygame.sprite.Group()
+        shots = pygame.sprite.Group()
 
         # Set up sprite containers
         Player.containers = (updateable, drawable)
         Asteroid.containers = (asteroid, updateable, drawable)
         AsteroidField.containers = (updateable)
+        Shot.containers = (shots, updateable, drawable)
 
-        # Create game objects
+        # Create game objects 
         player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
         asteroid_field = AsteroidField()
         
-        return updateable, drawable, asteroid, player, asteroid_field, False
+        return updateable, drawable, asteroid, shots, player, asteroid_field, False
 
     # Initial game setup
-    updateable, drawable, asteroid, player, asteroid_field, game_over = init_game()
+    updateable, drawable, asteroid, shots, player, asteroid_field, game_over = init_game()
 
     while True: 
         for event in pygame.event.get():
@@ -52,8 +55,8 @@ def main():
         keys = pygame.key.get_pressed()
        
         if game_over and keys[pygame.K_r]:
-            # Reset entire jgame state
-            updateable, drawable, asteroid, player, asteroid_field, game_over = init_game()
+            # Reset entire game state
+            updateable, drawable, asteroid, shots, player, asteroid_field, game_over = init_game()
         elif not game_over:
             # Update all sprites
             for sprite in updateable:

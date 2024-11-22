@@ -1,22 +1,26 @@
 import pygame
 from constants import *
 from circleshape import *
+from shot import Shot
 
 class Player(CircleShape):
     def __init__(self, x, y):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
-        
-    def triangle(self):
-        forward = pygame.Vector2(0, 1).rotate(self.rotation)
-        right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
-        a = self.position + forward * self.radius
-        b = self.position - forward * self.radius - right
-        c = self.position - forward * self.radius + right
-        return [a, b, c]
+        self.shoot_cooldown = 0.5
+        self.button_spam_cooldown = 0.02
 
-    def draw(self, screen):
-        pygame.draw.polygon(screen, "white", self.triangle(), 2)
+    def triangle(self):
+        # Calculate triangle points for player ship
+        forward = pygame.Vector2(0, 1).rotate(self.rotation)  # Point upward by default
+        right = forward.rotate(90)
+        
+        # Calculate three points of triangle
+        nose = self.position + forward * self.radius
+        left_wing = self.position - forward * (self.radius/2) - right * (self.radius/2)
+        right_wing = self.position - forward * (self.radius/2) + right * (self.radius/2)
+        
+        return [nose, left_wing, right_wing]
     
     def rotate(self, dt):
         self.rotation += PLAYER_TURN_SPEED * dt
@@ -39,8 +43,29 @@ class Player(CircleShape):
         if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
             self.move(dt * 2)
 
+        # Update cooldown
+        if self.shoot_cooldown > 0:
+            self.shoot_cooldown -= dt
+
+        # Then handle shooting
+        if keys[pygame.K_SPACE]:
+            if self.shoot_cooldown <= 0:
+                new_shot = self.shoot()
+                if new_shot:
+                    self.shoot_cooldown = PLAYER_SHOOT_COOLDOWN
+                return new_shot
+
     def is_collided(self, other):
         total_radius = self.radius + other.radius
         if self.position.distance_to(other.position) <= total_radius:
             return True
-        return False
+        else:
+            return False
+    
+    def shoot(self):
+        shot = Shot(self.position.x, self.position.y, SHOT_RADIUS)
+        shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
+        return shot
+    
+    def draw(self, screen):
+        pygame.draw.polygon(screen, "lightblue", self.triangle(), 2)
