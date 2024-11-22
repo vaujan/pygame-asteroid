@@ -15,6 +15,11 @@ This is an implementation of the classic Asteroids game, created as part of the 
 - Game development with Pygame
 - Basic physics and collision detection
 
+## Screenshots
+
+![Gameplay Screenshot](assets/screenshots/gameplay.png)
+*Avoiding certain death while shooting space rocks* 😅
+
 ### What's Going On Here?
 
 1. You control a spaceship (hopefully without crashing)
