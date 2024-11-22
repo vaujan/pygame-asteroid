@@ -12,3 +12,10 @@ class Shot(CircleShape):
     
     def update(self, dt):
         self.position += self.velocity * dt
+    
+    def is_collided(self, other):
+        total_radius = self.radius + other.radius
+        if self.position.distance_to(other.position) <= total_radius:
+            return True
+        else:
+            return False
