@@ -2,6 +2,8 @@
 
 ## 🚨 Disclaimer 🚨
 
+/home/thatguy/Pictures/Screenshot from 2024-11-22 17-04-56.png
+
 > - There's a non-zero chance I have no idea how some parts of this actually work 😅
 > - Some solutions might be... let's say "creatively implemented" 🎨
 >   Remember: This is a learning project, not a NASA space mission control system.
@@ -14,7 +16,6 @@ This is an implementation of the classic Asteroids game, created as part of the 
 - Python and OOP fundamentals
 - Game development with Pygame
 - Basic physics and collision detection
-- How to not panic when asteroids are heading towards your spaceship 🚀
 
 ### What's Going On Here?
 
